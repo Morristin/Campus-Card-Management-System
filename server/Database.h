@@ -1,10 +1,10 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include <mutex>
 #include <sqlite3.h>
 #include <string>
-
-#include "../protocol/protocol.h"
+#include <vector>
 
 struct DatabaseException : std::exception {
 private:
@@ -17,7 +17,7 @@ public:
 
 class Database {
 private:
-    static constexpr std::string DATABASE_PATH = "server/data.sqlite3";
+    static constexpr std::string DATABASE_PATH = "data.sqlite3";
     sqlite3* database { };
 
     static std::mutex database_mutex;

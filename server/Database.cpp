@@ -1,6 +1,6 @@
 #include "Database.h"
-
 #include "../logger/Logger.h"
+#include "../protocol/Protocol.h"
 
 static auto logger = Logger(__FILE__);
 
@@ -16,8 +16,6 @@ Database::Database(const std::string& database_path)
             logger.critical(std::format("Failed to create database directory: {}.", err.what()));
         }
     }
-
-    sqlite3_open_v2(database_path.c_str(), &database, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
 
     if (const int status = sqlite3_open(database_path.c_str(), &database); status != SQLITE_OK)
         logger.critical(std::format("Can not connect to database: {}", database_path));
@@ -77,7 +75,7 @@ void Database::check_and_deduct_fixed_fee()
 {
     std::lock_guard lock(database_mutex);
 
-    // Check the last deduction time. If the data doesn't match requirment, just return.
+    // Check the last deduction time. If the data doesn't match requirement, just return.
     constexpr auto FIXED_FEE_OPERATOR            = "SYSTEM_FEE";
     constexpr auto SQL_CHECK_LAST_DEDUCTION_TIME = "SELECT COUNT(*) FROM Transactions WHERE Transactions.Operator = ? AND TransactionTime > datetime('now', '-180 days')";
 
@@ -87,7 +85,7 @@ void Database::check_and_deduct_fixed_fee()
     if (sqlite3_step(cursor); sqlite3_column_int(cursor, 0) != 0)
         return;
 
-    // If the deduction never happened, do dudect at 3.1, 6.1, 9.1 and 12.1.
+    // If the deduction never happened, do deduct at 3.1, 6.1, 9.1 and 12.1.
     // Detect date from database instead of server.
     constexpr auto SQL_CHECK_DEDUCTION_EVER_HAPPENED = "SELECT COUNT(*) FROM Transactions WHERE Operator = ?";
 
@@ -104,10 +102,10 @@ void Database::check_and_deduct_fixed_fee()
     // Get all card for deducting fixed fee from table Users.
     std::vector<std::string> card_numbers;
 
-    constexpr auto SQL_GET_ALL_CARDNUMBER = "SELECT Users.CardNumber FROM Users "
-                                            "WHERE Users.Status = ? AND Users.CardNumber IS NOT NULL";
+    constexpr auto SQL_GET_ALL_CARD_NUMBERS = "SELECT Users.CardNumber FROM Users "
+                                              "WHERE Users.Status = ? AND Users.CardNumber IS NOT NULL";
 
-    sqlite3_prepare_v2(database, SQL_GET_ALL_CARDNUMBER, -1, &cursor, nullptr);
+    sqlite3_prepare_v2(database, SQL_GET_ALL_CARD_NUMBERS, -1, &cursor, nullptr);
     sqlite3_bind_int(cursor, 1, UserStatus::NORMAL);
 
     while (sqlite3_step(cursor) == SQLITE_ROW) {
