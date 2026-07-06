@@ -2,6 +2,7 @@
 #define SERVER_H
 
 #include "../logger/Logger.h"
+#include "../protocol/protocol.h"
 #include "../stream/Stream.h"
 #include "Database.h"
 
@@ -42,10 +43,10 @@ private:
     std::unordered_map<std::string_view, Route> routes {
         { "login", { 0, [this](Session& s) { handle_login(s); } } },
         { "update_system_settings", { Permission::OPERATOR, [this](const Session& s) { handle_update_system_settings(s); } } },
-        { "export_server_logs", { Permission::SUPEROPERATOR, [](const Session& s) { handle_export_server_logs(s); } } },
+        { "export_server_logs", { Permission::SUPER_OPERATOR, [](const Session& s) { handle_export_server_logs(s); } } },
 
-        { "create_operator", { Permission::SUPEROPERATOR, [this](const Session& s) { handle_create_operator(s); } } },
-        { "delete_operator", { Permission::SUPEROPERATOR, [this](const Session& s) { handle_delete_operator(s); } } },
+        { "create_operator", { Permission::SUPER_OPERATOR, [this](const Session& s) { handle_create_operator(s); } } },
+        { "delete_operator", { Permission::SUPER_OPERATOR, [this](const Session& s) { handle_delete_operator(s); } } },
 
         { "create_student", { Permission::OPERATOR, [this](const Session& s) { handle_create_student(s); } } },
         { "delete_student", { Permission::OPERATOR, [this](const Session& s) { handle_delete_student(s); } } },

@@ -97,8 +97,8 @@ public:
 
 class SuperOperator : public Operator {
 protected:
-    [[nodiscard]] Dashboard main_dashboard() const override { return superoperator_dashboard; }
-    Dashboard superoperator_dashboard = {
+    [[nodiscard]] Dashboard main_dashboard() const override { return super_operator_dashboard; }
+    Dashboard super_operator_dashboard = {
         MenuItem("Create Operator", "Create an operator.", [this] { create_operator(); }),
         MenuItem("Delete Operator", "Delete an operator.", [this] { delete_operator(); }),
         MenuItem("Reset Operator Password", "Reset an operator's password.", [this] { reset_operator_password(); }),

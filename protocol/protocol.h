@@ -1,7 +1,6 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
-#include <format>
 #include <string_view>
 
 namespace UserStatus {
@@ -12,14 +11,14 @@ constexpr int OVERDRAWN = 6;
 }
 
 namespace Permission {
-constexpr int DEFAULT       = 0;
-constexpr int STUDENT       = 4;
-constexpr int OPERATOR      = 6;
-constexpr int SUPEROPERATOR = 7;
+constexpr int DEFAULT        = 0;
+constexpr int STUDENT        = 4;
+constexpr int OPERATOR       = 6;
+constexpr int SUPER_OPERATOR = 7;
 }
 
 namespace Default {
-constexpr std::string PASSWORD        = "123456";
+constexpr std::string_view PASSWORD   = "123456";
 constexpr std::string_view CardNumber = "NULL";
 constexpr double ConsumptionLimit     = 0.0;
 }

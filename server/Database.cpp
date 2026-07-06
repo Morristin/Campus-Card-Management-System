@@ -254,7 +254,7 @@ void Database::create_student(const std::string& real_name, const std::string& g
         throw DatabaseException(ErrorMsg::USERINFO_EXISTS);
 
     try {
-        create_account(student_id, Default::PASSWORD, Permission::STUDENT);
+        create_account(student_id, Default::PASSWORD.data(), Permission::STUDENT);
     } catch (const DatabaseException&) {
         // If create_account failed，rollback to previous UserInfo table.
         sqlite3_prepare_v2(database, "DELETE FROM UserInfo WHERE Username = ?", -1, &cursor, nullptr);
